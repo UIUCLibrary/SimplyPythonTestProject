@@ -47,7 +47,7 @@ pipeline {
             steps {
                 deleteDir()
                 unstash "Source"
-                bat "${env.PYTHON3} setup.py sdist"
+                sh "${env.PYTHON3} setup.py sdist"
                 stash includes: 'dist/*.*', name: "Source_Dist"
             }
 
