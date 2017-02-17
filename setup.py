@@ -4,7 +4,7 @@ setup(
     name='SimplePythonTestProject',
     version='0.0.1',
     packages=['simplePython'],
-    test_require=['pytest'],
+    tests_require=['pytest'],
     test_suite="tests",
     url='',
     license='',
