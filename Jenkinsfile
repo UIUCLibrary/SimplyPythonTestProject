@@ -14,16 +14,15 @@ pipeline {
             }
 
 
-
         }
 
 
         stage("Testing Windows") {
-            agent{
+            agent {
                 label 'Windows'
             }
 
-            steps{
+            steps {
                 unstash "Source"
                 bat "${env.TOX}  --skip-missing-interpreters"
 
@@ -34,11 +33,22 @@ pipeline {
             agent {
                 label 'Windows'
             }
-            steps{
+            steps {
                 bat "${env.PYTHON3} setup.py bdist_wheel --universal"
-
+                stash includes: 'dist/*.whl', name: "Windows_Wheel"
             }
 
+        }
+
+        stage("Archiving") {
+            agent any
+
+            steps {
+                deleteDir()
+                echo "Packaging"
+                unstash "Windows_Wheel"
+                archiveArtifacts artifacts: "**", fingerprint: true
+            }
         }
 
     }
