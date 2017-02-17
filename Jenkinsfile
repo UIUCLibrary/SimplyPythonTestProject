@@ -25,10 +25,20 @@ pipeline {
 
             steps{
                 unstash "Source"
-                bat 'TOX  --skip-missing-interpreters'
+                bat "${env.TOX}  --skip-missing-interpreters"
 
 
             }
+        }
+        stage("Packaging Windows wheel") {
+            agent {
+                label 'Windows'
+            }
+            steps{
+                bat "${env.PYTHON3} setup.py bdist_wheel --universal"
+
+            }
+
         }
 
     }
