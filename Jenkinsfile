@@ -60,7 +60,7 @@ pipeline {
                 deleteDir()
                 echo "Packaging"
                 unstash "Windows_Wheel"
-                stash includes: 'dist/*.*', name: "Source_Dist"
+                unstash "Source_Dist"
                 archiveArtifacts artifacts: "**", fingerprint: true
             }
         }
