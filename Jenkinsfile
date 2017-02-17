@@ -34,8 +34,21 @@ pipeline {
                 label 'Windows'
             }
             steps {
+                deleteDir()
+                unstash "Source"
                 bat "${env.PYTHON3} setup.py bdist_wheel --universal"
                 stash includes: 'dist/*.whl', name: "Windows_Wheel"
+            }
+
+        }
+        stage("Packaging Source") {
+            agent any
+
+            steps {
+                deleteDir()
+                unstash "Source"
+                bat "${env.PYTHON3} setup.py sdist"
+                stash includes: 'dist/*.*', name: "Source_Dist"
             }
 
         }
@@ -47,6 +60,7 @@ pipeline {
                 deleteDir()
                 echo "Packaging"
                 unstash "Windows_Wheel"
+                stash includes: 'dist/*.*', name: "Source_Dist"
                 archiveArtifacts artifacts: "**", fingerprint: true
             }
         }
